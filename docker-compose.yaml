@@ -1,0 +1,65 @@
+services:
+
+  shlink-api:
+    image: shlinkio/shlink:${SHLINK_VERSION:-stable}
+    env_file: environment.d/shlink-api.env
+    environment:
+      DEFAULT_DOMAIN: ${DEFAULT_DOMAIN:-localhost}
+      IS_HTTPS_ENABLED: ${IS_HTTPS_ENABLED:-no}
+      GEOLITE_LICENSE_KEY: ${GEOLITE_LICENSE_KEY}
+      DB_DRIVER: ${DATABASE_DRIVER:-postgres}
+      DB_HOST: ${DATABASE_HOST:-database}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_NAME: ${DATABASE_NAME:-shlink}
+      DB_USER: ${DATABASE_USER:-shlink}
+      DB_PASSWORD: ${DATABASE_PASSWORD}
+      INITIAL_API_KEY: ${API_KEY}
+    ports:
+      - ${API_PORT:-8080}:8080
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      com.centurylinklabs.watchtower.scope: ${COMPOSE_PROJECT_NAME}
+    restart: unless-stopped
+
+  shlink-web:
+    image: shlinkio/shlink-web-client:${SHLINK_VERSION:-stable}
+    env_file: environment.d/shlink-web.env
+    environment:
+      SHLINK_SERVER_URL: shlink-api
+      SHLINK_SERVER_API_KEY: ${API_KEY}
+    ports:
+      - ${WEB_PORT:-8000}:8000
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      com.centurylinklabs.watchtower.scope: ${COMPOSE_PROJECT_NAME}
+    restart: unless-stopped
+  
+  database:
+    image: postgres:${POSTGRES_VERSION:-17.0}
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-shlink}
+      POSTGRES_USER: ${DATABASE_USER:-shlink}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - ${DATABASE_VOLUME:-database-data}:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      com.centurylinklabs.watchtower.scope: immich-compose
+    restart: unless-stopped
+
+  watchtower:
+    image: containrrr/watchtower:${WATCHTOWER_VERSION:-latest}
+    env_file: environment.d/watchtower.env
+    environment:
+      WATCHTOWER_SCOPE: ${COMPOSE_PROJECT_NAME}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      com.centurylinklabs.watchtower.scope: ${COMPOSE_PROJECT_NAME}
+    restart: unless-stopped
+
+volumes:
+  database-data: {}
