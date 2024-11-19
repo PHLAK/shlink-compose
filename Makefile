@@ -1,3 +1,3 @@
 init initialize:
-	@cp --interactive --verbose .skelleton/environment.d/*.env environment.d/ || true
-	@cp --interactive --verbose .skelleton/.env . || true
+	@cp --interactive --verbose .skeleton/environment.d/*.env environment.d/ || true
+	@cp --interactive --verbose .skeleton/.env . || true
