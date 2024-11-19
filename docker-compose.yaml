@@ -51,8 +51,8 @@ services:
     image: prodrigestivill/postgres-backup-local:${POSTGRES_BACKUP_VERSION:-17}
     env_file: environment.d/database-backups.env
     environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_CLUSTER: 'TRUE'
+      POSTGRES_HOST: ${DATABASE_HOST:-database}
+      POTGRES_PORT: ${DB_PORT:-5432}
       POSTGRES_DB: ${DATABASE_NAME:-shlink}
       POSTGRES_USER: ${DATABASE_USER:-shlink}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
