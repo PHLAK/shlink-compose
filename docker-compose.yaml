@@ -34,7 +34,7 @@ services:
     restart: unless-stopped
   
   database:
-    image: postgres:${POSTGRES_VERSION:-17.0}
+    image: postgres:${POSTGRES_VERSION:-17}
     env_file: environment.d/postgres.env
     environment:
       POSTGRES_DB: ${DATABASE_NAME:-shlink}
@@ -48,7 +48,7 @@ services:
     restart: unless-stopped
   
   database-backups:
-    image: prodrigestivill/postgres-backup-local:${POSTGRES_BACKUP_VERSION:-17}
+    image: prodrigestivill/postgres-backup-local:${POSTGRES_BACKUP_VERSION:-${POSTGRES_VERSION:-17}}
     env_file: environment.d/database-backups.env
     environment:
       POSTGRES_HOST: ${DATABASE_HOST:-database}
