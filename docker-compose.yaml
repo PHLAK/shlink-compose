@@ -32,7 +32,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.scope: ${COMPOSE_PROJECT_NAME}
     restart: unless-stopped
-  
+
   database:
     image: postgres:${POSTGRES_VERSION:-17}
     env_file: environment.d/postgres.env
@@ -46,7 +46,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.scope: ${COMPOSE_PROJECT_NAME}
     restart: unless-stopped
-  
+
   database-backups:
     image: prodrigestivill/postgres-backup-local:${POSTGRES_BACKUP_VERSION:-${POSTGRES_VERSION:-17}}
     env_file: environment.d/database-backups.env
@@ -59,7 +59,7 @@ services:
       POSTGRES_EXTRA_OPTS: '--clean --if-exists'
       BACKUP_DIR: /backups
     volumes:
-      - ./volumes/backups:/backups
+      - ${DATABASE_BACKUPS_PATH:-./volumes/backups}:/backups
       - /etc/localtime:/etc/localtime:ro
     depends_on: [database]
     restart: unless-stopped
