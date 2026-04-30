@@ -14,7 +14,7 @@ services:
       DB_PASSWORD: ${DATABASE_PASSWORD}
       INITIAL_API_KEY: ${API_KEY}
     ports:
-      - ${API_PORT:-8080}:8080
+      - ${API_PORT:-127.0.0.1:8080}:8080
     volumes:
       - /etc/localtime:/etc/localtime:ro
     labels:
@@ -26,7 +26,7 @@ services:
     image: shlinkio/shlink-web-client:${SHLINK_VERSION:-stable}
     env_file: environment.d/shlink-web.env
     ports:
-      - ${WEB_PORT:-8000}:8080
+      - ${WEB_PORT:-127.0.0.1:8000}:8080
     volumes:
       - /etc/localtime:/etc/localtime:ro
     labels:
